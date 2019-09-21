@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using ZbW.Testing.Dms.Client.Model;
 using ZbW.Testing.Dms.Client.Services;
 
 namespace ZbW.Testing.Dms.Tests

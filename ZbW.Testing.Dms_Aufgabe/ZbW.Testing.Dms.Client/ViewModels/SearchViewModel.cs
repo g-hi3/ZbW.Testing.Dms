@@ -1,12 +1,14 @@
-﻿namespace ZbW.Testing.Dms.Client.ViewModels
+﻿using ZbW.Testing.Dms.Client.Services;
+
+namespace ZbW.Testing.Dms.Client.ViewModels
 {
     using System.Collections.Generic;
 
     using Prism.Commands;
     using Prism.Mvvm;
 
-    using ZbW.Testing.Dms.Client.Model;
-    using ZbW.Testing.Dms.Client.Repositories;
+    using Model;
+    using Repositories;
 
     internal class SearchViewModel : BindableBase
     {
@@ -37,69 +39,35 @@
 
         public string Suchbegriff
         {
-            get
-            {
-                return _suchbegriff;
-            }
-
-            set
-            {
-                SetProperty(ref _suchbegriff, value);
-            }
+            get => _suchbegriff;
+            set => SetProperty(ref _suchbegriff, value);
         }
 
         public List<string> TypItems
         {
-            get
-            {
-                return _typItems;
-            }
-
-            set
-            {
-                SetProperty(ref _typItems, value);
-            }
+            get => _typItems;
+            set => SetProperty(ref _typItems, value);
         }
 
         public string SelectedTypItem
         {
-            get
-            {
-                return _selectedTypItem;
-            }
-
-            set
-            {
-                SetProperty(ref _selectedTypItem, value);
-            }
+            get => _selectedTypItem;
+            set => SetProperty(ref _selectedTypItem, value);
         }
 
         public List<MetadataItem> FilteredMetadataItems
         {
-            get
-            {
-                return _filteredMetadataItems;
-            }
-
-            set
-            {
-                SetProperty(ref _filteredMetadataItems, value);
-            }
+            get => _filteredMetadataItems;
+            set => SetProperty(ref _filteredMetadataItems, value);
         }
 
         public MetadataItem SelectedMetadataItem
         {
-            get
-            {
-                return _selectedMetadataItem;
-            }
-
+            get => _selectedMetadataItem;
             set
             {
                 if (SetProperty(ref _selectedMetadataItem, value))
-                {
                     CmdOeffnen.RaiseCanExecuteChanged();
-                }
             }
         }
 
@@ -116,6 +84,8 @@
         private void OnCmdSuchen()
         {
             // TODO: Add your Code here
+            var searchService = new SearchService();
+            FilteredMetadataItems = searchService.FindMetadataItems(_suchbegriff, _selectedTypItem);
         }
 
         private void OnCmdReset()

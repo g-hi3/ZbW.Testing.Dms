@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Security.Permissions;
 using ZbW.Testing.Dms.Client.Model;
 
 namespace ZbW.Testing.Dms.Client.Services
