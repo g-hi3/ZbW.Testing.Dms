@@ -1,4 +1,7 @@
-﻿using ZbW.Testing.Dms.Client.Services;
+﻿using System.Configuration;
+using System.Diagnostics;
+using System.IO;
+using ZbW.Testing.Dms.Client.Services;
 
 namespace ZbW.Testing.Dms.Client.ViewModels
 {
@@ -79,6 +82,11 @@ namespace ZbW.Testing.Dms.Client.ViewModels
         private void OnCmdOeffnen()
         {
             // TODO: Add your Code here
+            var metadataFileName = SelectedMetadataItem.FileName;
+            var guid = metadataFileName.Substring(metadataFileName.IndexOf('{'), 37);
+            var searchService = new SearchService();
+            var documentFile = searchService.FindDocumentFile(guid);
+            Process.Start(documentFile.FullName);
         }
 
         private void OnCmdSuchen()
@@ -91,6 +99,9 @@ namespace ZbW.Testing.Dms.Client.ViewModels
         private void OnCmdReset()
         {
             // TODO: Add your Code here
+            Suchbegriff = "";
+            SelectedTypItem = "";
+            FilteredMetadataItems = new List<MetadataItem>();
         }
     }
 }

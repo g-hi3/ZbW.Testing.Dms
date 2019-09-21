@@ -47,6 +47,23 @@ namespace ZbW.Testing.Dms.Client.Services
                         || item.Map["Typ"].ToString().Equals(type))
                 .ToList();
         }
-        
+
+        public FileInfo FindDocumentFile(string guid)
+        {
+            var basePath = _configuration.RepositoryDir;
+            var baseDir = new DirectoryInfo(basePath);
+            return FindDocumentFile(baseDir, guid);
+        }
+
+        private FileInfo FindDocumentFile(DirectoryInfo parentDir, string guid)
+        {
+            foreach (var file in parentDir.GetFiles())
+                if (file.Name.Contains(guid))
+                    return file;
+            foreach (var dir in parentDir.GetDirectories())
+                FindDocumentFile(dir, guid);
+            throw new IOException("File with guid " + guid + "not found!");
+        }
+
     }
 }

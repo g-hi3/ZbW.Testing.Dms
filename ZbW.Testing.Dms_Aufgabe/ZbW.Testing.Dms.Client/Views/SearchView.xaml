@@ -38,13 +38,13 @@
         </Grid>
         <DataGrid Grid.Row="1"
                   ItemsSource="{Binding FilteredMetadataItems}"
-                  SelectedItem="{Binding SelectedMetadataItem}"
-                  AutoGenerateColumns="True">
+                  SelectedItem="{Binding SelectedMetadataItem}">
             <!--TODO: Remove AutoGenerateColumns="True" and specify your own columns -->
-            <!--<DataGrid.Columns>
-                <DataGridTextColumn Header="Typ" Binding="{Binding Typ}"/>
-                <DataGridTextColumn Header="Bezeichnung" Binding="{Binding Bezeichnung}"/>
-            </DataGrid.Columns>-->
+            <DataGrid.Columns>
+                <!-- TODO not sure what went wrong here -->
+                <DataGridTextColumn Header="Typ" Binding="{Binding Map[Typ]}"/>
+                <DataGridTextColumn Header="Bezeichnung" Binding="{Binding Map[Bezeichnung]}"/>
+            </DataGrid.Columns>
         </DataGrid>
 
         <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Content="Öffnen" Width="100"/>
