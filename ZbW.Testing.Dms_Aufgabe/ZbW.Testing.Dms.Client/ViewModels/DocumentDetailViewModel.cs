@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections;
+using System.Windows;
+using ZbW.Testing.Dms.Client.Model;
 using ZbW.Testing.Dms.Client.Services;
 
 namespace ZbW.Testing.Dms.Client.ViewModels
@@ -11,7 +13,7 @@ namespace ZbW.Testing.Dms.Client.ViewModels
     using Prism.Commands;
     using Prism.Mvvm;
 
-    using ZbW.Testing.Dms.Client.Repositories;
+    using Repositories;
 
     internal class DocumentDetailViewModel : BindableBase
     {
@@ -46,7 +48,7 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             CmdSpeichern = new DelegateCommand(OnCmdSpeichern);
         }
 
-        public void Validate()
+        private void Validate()
         {
             if (string.IsNullOrEmpty(Bezeichnung)
                 || !ValutaDatum.HasValue
@@ -56,80 +58,38 @@ namespace ZbW.Testing.Dms.Client.ViewModels
 
         public string Stichwoerter
         {
-            get
-            {
-                return _stichwoerter;
-            }
-
-            set
-            {
-                SetProperty(ref _stichwoerter, value);
-            }
+            get => _stichwoerter;
+            set => SetProperty(ref _stichwoerter, value);
         }
 
         public string Bezeichnung
         {
-            get
-            {
-                return _bezeichnung;
-            }
-
-            set
-            {
-                SetProperty(ref _bezeichnung, value);
-            }
+            get => _bezeichnung;
+            set => SetProperty(ref _bezeichnung, value);
         }
 
         public List<string> TypItems
         {
-            get
-            {
-                return _typItems;
-            }
-
-            set
-            {
-                SetProperty(ref _typItems, value);
-            }
+            get => _typItems;
+            set => SetProperty(ref _typItems, value);
         }
 
         public string SelectedTypItem
         {
-            get
-            {
-                return _selectedTypItem;
-            }
-
-            set
-            {
-                SetProperty(ref _selectedTypItem, value);
-            }
+            get => _selectedTypItem;
+            set => SetProperty(ref _selectedTypItem, value);
         }
 
         public DateTime Erfassungsdatum
         {
-            get
-            {
-                return _erfassungsdatum;
-            }
-
-            set
-            {
-                SetProperty(ref _erfassungsdatum, value);
-            }
+            get => _erfassungsdatum;
+            set => SetProperty(ref _erfassungsdatum, value);
         }
 
         public string Benutzer
         {
-            get
-            {
-                return _benutzer;
-            }
-
-            set
-            {
-                SetProperty(ref _benutzer, value);
-            }
+            get => _benutzer;
+            set => SetProperty(ref _benutzer, value);
         }
 
         public DelegateCommand CmdDurchsuchen { get; }
@@ -138,28 +98,14 @@ namespace ZbW.Testing.Dms.Client.ViewModels
 
         public DateTime? ValutaDatum
         {
-            get
-            {
-                return _valutaDatum;
-            }
-
-            set
-            {
-                SetProperty(ref _valutaDatum, value);
-            }
+            get => _valutaDatum;
+            set => SetProperty(ref _valutaDatum, value);
         }
 
         public bool IsRemoveFileEnabled
         {
-            get
-            {
-                return _isRemoveFileEnabled;
-            }
-
-            set
-            {
-                SetProperty(ref _isRemoveFileEnabled, value);
-            }
+            get => _isRemoveFileEnabled;
+            set => SetProperty(ref _isRemoveFileEnabled, value);
         }
 
         private void OnCmdDurchsuchen()
@@ -179,9 +125,12 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             try
             {
                 Validate();
+                var guid = new GuidProvider().NextGuid;
                 var saveService = new SaveService();
-                saveService.CreateDirectory(ValutaYearAsString);
-                saveService.SaveDocument(_filePath, !IsRemoveFileEnabled);
+                var document = new DocumentItem(ValutaYearAsString + "\\" + guid, _filePath, !_isRemoveFileEnabled);
+                var metadata = new MetadataItem(ValutaYearAsString + "\\" + guid,  MetaDataAsMap);
+                saveService.SaveDocument(document);
+                saveService.SaveDocument(metadata);
                 _navigateBack();
             }
             catch (Exception e)
@@ -191,5 +140,14 @@ namespace ZbW.Testing.Dms.Client.ViewModels
         }
 
         private string ValutaYearAsString => _valutaDatum.Value.Year.ToString();
+        private IDictionary MetaDataAsMap => new Dictionary<string, object>()
+        {
+            {"Erfassungsdatum", _erfassungsdatum},
+            {"Valutadatum", _valutaDatum},
+            {"Bezeichnung", _bezeichnung},
+            {"Stichwörter", _stichwoerter},
+            {"Typ", _selectedTypItem},
+            {"Benutzer", _benutzer}
+        };
     }
 }

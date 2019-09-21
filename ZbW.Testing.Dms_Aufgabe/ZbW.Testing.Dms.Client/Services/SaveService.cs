@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Security.Permissions;
+using ZbW.Testing.Dms.Client.Model;
 
 namespace ZbW.Testing.Dms.Client.Services
 {
@@ -23,13 +25,29 @@ namespace ZbW.Testing.Dms.Client.Services
                 File.Move(sourceFilePath, destinationFilePath);
         }
 
+        public void SaveDocument(ISaveableItem item)
+        {
+            CreateDirectory();
+            var fullPath = _configuration.RepositoryDir + PathSeparator + item.FileName;
+            var content = item.FileContent;
+
+            if (content is string s)
+                File.WriteAllText(fullPath, s);
+            
+            if (content is byte[] b)
+                File.WriteAllBytes(fullPath, b);
+            
+            if (!item.KeepOriginal && item.OriginalPath != null)
+                File.Delete(item.OriginalPath);
+        }
+
         private string GetFileNameFromPath(string filePath)
         {
             var pathParts = filePath.Split(PathSeparator);
             return pathParts[pathParts.Length - 1];
         }
 
-        public void CreateDirectory(string folderPath)
+        public void CreateDirectory(string folderPath = "")
         {
             var fullPath = _configuration.RepositoryDir + PathSeparator + folderPath;
             

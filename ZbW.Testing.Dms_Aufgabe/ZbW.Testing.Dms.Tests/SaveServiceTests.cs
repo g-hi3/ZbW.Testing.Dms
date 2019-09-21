@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
+using ZbW.Testing.Dms.Client.Model;
 using ZbW.Testing.Dms.Client.Services;
 
 namespace ZbW.Testing.Dms.Tests
@@ -47,6 +48,22 @@ namespace ZbW.Testing.Dms.Tests
             
             // Assert
             Assert.IsFalse(File.Exists(filePath));
+        }
+
+        [Test]
+        public void SaveDocument_Saveable_ItemSaves()
+        {
+            // Arrange
+            var saveable = new SaveableItemStub();
+            var saveService = new SaveService(Config);
+            var fullPath = RepositoryPath + '\\' + saveable.FileName;
+
+            // Act
+            saveService.SaveDocument(saveable);
+
+            // Assert
+            Assert.IsTrue(File.Exists(fullPath));
+            Assert.AreEqual(saveable.FileContent, File.ReadAllText(fullPath));
         }
 
         [Test]
