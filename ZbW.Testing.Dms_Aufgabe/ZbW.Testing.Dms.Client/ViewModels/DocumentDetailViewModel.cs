@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ZbW.Testing.Dms.Client.Services;
 
 namespace ZbW.Testing.Dms.Client.ViewModels
 {
@@ -50,7 +51,7 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             if (string.IsNullOrEmpty(Bezeichnung)
                 || !ValutaDatum.HasValue
                 || string.IsNullOrEmpty(SelectedTypItem))
-                throw new ArgumentException("Some required values have not been set.");
+                throw new ArgumentException("Es müssen alle Pflichtfelder ausgefüllt werden!");
         }
 
         public string Stichwoerter
@@ -178,9 +179,11 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             try
             {
                 Validate();
+                var saveService = new SaveService();
+                saveService.SaveDocument(_filePath, !IsRemoveFileEnabled);
                 _navigateBack();
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
