@@ -9,6 +9,7 @@ namespace ZbW.Testing.Dms.Tests
     {
         private const string RepositoryPath = @"C:\Temp\DMS";
         private const string OriginalFileName = "original-file.txt";
+        private const string FolderPath = "2018";
         private static readonly Configuration Config = new ConfigurationStub();
         
         [SetUp]
@@ -48,11 +49,31 @@ namespace ZbW.Testing.Dms.Tests
             Assert.IsFalse(File.Exists(filePath));
         }
 
+        [Test]
+        public void CreateDirectory_FolderCreated()
+        {
+            // Arrange
+            var folderPath = FolderPath;
+            var service = new SaveService(Config);
+
+            // Act
+            service.CreateDirectory(folderPath);
+
+            // Assert
+            Assert.IsTrue(Directory.Exists(RepositoryPath + '\\' + folderPath));
+        }
+
         [TearDown]
         public void RemoveAllFiles()
         {
-            File.Delete(OriginalFileName);
-            File.Delete(RepositoryPath + '\\' + OriginalFileName);
+            if (File.Exists(OriginalFileName))
+                File.Delete(OriginalFileName);
+            
+            if (File.Exists(RepositoryPath + '\\' + OriginalFileName))
+                File.Delete(RepositoryPath + '\\' + OriginalFileName);
+            
+            if (Directory.Exists(RepositoryPath + '\\' + FolderPath))
+                Directory.Delete(RepositoryPath + '\\' + FolderPath);
         }
 
         private void DeleteFile(string filePath)

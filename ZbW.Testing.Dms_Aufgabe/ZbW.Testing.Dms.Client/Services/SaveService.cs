@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.IO;
+﻿using System.IO;
 
 namespace ZbW.Testing.Dms.Client.Services
 {
@@ -30,6 +29,22 @@ namespace ZbW.Testing.Dms.Client.Services
             return pathParts[pathParts.Length - 1];
         }
 
-        public string RepositoryPath => ConfigurationManager.AppSettings["RepositoryDir"];
+        public void CreateDirectory(string folderPath)
+        {
+            var fullPath = _configuration.RepositoryDir + PathSeparator + folderPath;
+            
+            if (Directory.Exists(fullPath))
+                return;
+
+            var pathParts = fullPath.Split(PathSeparator);
+            var currentPath = "";
+            foreach (var part in pathParts)
+            {
+                currentPath += part + PathSeparator;
+
+                if (!Directory.Exists(currentPath))
+                    Directory.CreateDirectory(currentPath);
+            }
+        }
     }
 }
