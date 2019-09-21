@@ -1,4 +1,6 @@
-﻿namespace ZbW.Testing.Dms.Client.ViewModels
+﻿using System.Windows;
+
+namespace ZbW.Testing.Dms.Client.ViewModels
 {
     using System;
     using System.Collections.Generic;
@@ -41,6 +43,14 @@
 
             CmdDurchsuchen = new DelegateCommand(OnCmdDurchsuchen);
             CmdSpeichern = new DelegateCommand(OnCmdSpeichern);
+        }
+
+        public void Validate()
+        {
+            if (string.IsNullOrEmpty(Bezeichnung)
+                || !ValutaDatum.HasValue
+                || string.IsNullOrEmpty(SelectedTypItem))
+                throw new ArgumentException("Some required values have not been set.");
         }
 
         public string Stichwoerter
@@ -165,8 +175,15 @@
         private void OnCmdSpeichern()
         {
             // TODO: Add your Code here
-
-            _navigateBack();
+            try
+            {
+                Validate();
+                _navigateBack();
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
     }
 }
