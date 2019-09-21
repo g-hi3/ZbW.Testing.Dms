@@ -7,14 +7,24 @@ namespace ZbW.Testing.Dms.Tests
 {
     public class SaveServiceTests
     {
+        private const string RepositoryPath = @"C:\Temp\DMS";
+        private const string OriginalFileName = "original-file.txt";
+        private static readonly Configuration Config = new ConfigurationStub();
+        
+        [SetUp]
+        public void CreateAllFolders()
+        {
+            if (!Directory.Exists(RepositoryPath))
+                Directory.CreateDirectory(RepositoryPath);
+        }
         
         [Test]
         public void SaveDocument_KeepOriginal_OriginalExists() {
             // Arrange
-            var filePath = "original-file.txt";
+            var filePath = OriginalFileName;
             DeleteFile(filePath);
             CreateFile(filePath);
-            var service = new SaveService();
+            var service = new SaveService(Config);
             
             // Act
             service.SaveDocument(filePath, true);
@@ -26,10 +36,10 @@ namespace ZbW.Testing.Dms.Tests
         [Test]
         public void SaveDocument_RemoveOriginal_OriginalDoesntExists() {
             // Arrange
-            var filePath = "original-file.txt";
+            var filePath = OriginalFileName;
             DeleteFile(filePath);
             CreateFile(filePath);
-            var service = new SaveService();
+            var service = new SaveService(Config);
             
             // Act
             service.SaveDocument(filePath, false);
@@ -41,8 +51,8 @@ namespace ZbW.Testing.Dms.Tests
         [TearDown]
         public void RemoveAllFiles()
         {
-            File.Delete("original-file.txt");
-            File.Delete(@"C:\Temp\original-file.txt");
+            File.Delete(OriginalFileName);
+            File.Delete(RepositoryPath + '\\' + OriginalFileName);
         }
 
         private void DeleteFile(string filePath)

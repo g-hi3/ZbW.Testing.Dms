@@ -72,6 +72,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\MetadataItem.cs" />
     <Compile Include="Repositories\ComboBoxItems.cs" />
+    <Compile Include="Services\Configuration.cs" />
     <Compile Include="Services\SaveService.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
