@@ -180,6 +180,7 @@ namespace ZbW.Testing.Dms.Client.ViewModels
             {
                 Validate();
                 var saveService = new SaveService();
+                saveService.CreateDirectory(ValutaYearAsString);
                 saveService.SaveDocument(_filePath, !IsRemoveFileEnabled);
                 _navigateBack();
             }
@@ -188,5 +189,7 @@ namespace ZbW.Testing.Dms.Client.ViewModels
                 MessageBox.Show(e.Message);
             }
         }
+
+        private string ValutaYearAsString => _valutaDatum.Value.Year.ToString();
     }
 }
