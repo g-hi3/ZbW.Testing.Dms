@@ -72,7 +72,7 @@ namespace ZbW.Testing.Dms.Tests
             saveService.SaveDocument(secondItem);
             var thirdMap = new Dictionary<string, object>()
             {
-                {"Bezeichnung", "My emperor queen has already touched this code"},
+                {"Bezeichnung", "My deadly queen has already touched this code"},
                 {"Typ", "Crazy Diamond"},
                 {"Stichwörter", "ok I guess"}
             };
